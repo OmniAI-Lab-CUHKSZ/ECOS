@@ -1,0 +1,41 @@
+{
+  "release": "0.3.0",
+  "date": "2026-10-25",
+  "python_source_files": 157,
+  "tests": {
+    "passed": 121,
+    "skipped": 2,
+    "failures": 0,
+    "errors": 0
+  },
+  "dry_runs": 12,
+  "sft_tasks": 800,
+  "sft_texts": 7200,
+  "natural_trajectories": 6400,
+  "all_packaged_prompt_ids_response_ids_text_messages_match_original": true,
+  "streamed_adamw_cpu_parameters_moments_counters_exact": true,
+  "cpu_test_runtime": {
+    "os": "Windows",
+    "python": "3.11.15",
+    "torch": "2.13.0+cpu"
+  },
+  "this_release_reran_gpu_training": false,
+  "model_weights_included": false,
+  "teacher": {
+    "actor_signal_scope": "action_command",
+    "outer_coefficient": 0.02,
+    "skip_on_all_success": true,
+    "modulation_mode": "symmetric_alignment",
+    "modulation_lambda": 1.0,
+    "modulation_tau": 0.5
+  },
+  "rs_coefficient": 0.1,
+  "sft_material_unchanged": true,
+  "original_material_verification_date": "2026-10-23",
+  "streamed_adamw_verification_date": "2026-10-23",
+  "framework_model_source_included": true,
+  "packaged_files": 295,
+  "removed_unrelated_files": 737,
+  "packaging_revision": 3,
+  "active_loss_and_state_implementations_unchanged": 19
+}

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "response-rs-self-distillation"
+version = "0.3.0"
+description = "Action-command Teacher supervision and joint Reflection/Skill updates for ALFWorld and WebShop"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = {file = "LICENSE"}
+dependencies = []
+
+[tool.setuptools.packages.find]
+include = ["response_rs*", "verl*", "agent_system*"]
+
+[tool.setuptools]
+py-modules = ["allow_profile_release", "direct_native_save", "durable_native_store", "environment_checkpoint_methods", "streamed_adamw", "streamed_native_load", "webshop_runtime"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+verl = ["version/*"]
+agent_system = ["environments/env_package/alfworld/configs/*.yaml", "environments/env_package/webshop/webshop/web_agent_site/templates/*.html", "environments/env_package/webshop/webshop/web_agent_site/static/*.css"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

@@ -1,0 +1,18 @@
+This distribution contains modified source from:
+
+GRSD — Group-Reflective Self-Distillation
+https://github.com/BinbZheng1/GRSD
+
+verl (ByteDance and contributors)
+https://github.com/volcengine/verl
+
+verl-agent / GiGPO (NTU and contributors)
+https://github.com/langfengQ/verl-agent
+
+Their Apache-2.0 notices and source headers are retained. Local modifications
+include action-command Teacher routing, all-success group masking, modulation,
+joint R/S optimization, durable full-state checkpoints and portable entrypoints.
+
+ALFWorld (alfworld/alfworld) and WebShop (princeton-nlp/WebShop) retain their
+own licenses. The nested WebShop LICENSE.md applies to its environment code.
+See THIRD_PARTY.md and data/README.md for code and dataset attribution.
