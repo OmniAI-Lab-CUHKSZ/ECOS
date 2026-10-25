@@ -1,0 +1,6 @@
+alfworld==0.4.2
+textworld==1.6.2
+gdown>=5
+spacy==3.8.15
+pyserini==0.17.0
+pyjnius==1.7.0

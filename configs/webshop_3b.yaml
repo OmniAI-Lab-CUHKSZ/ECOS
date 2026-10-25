@@ -1,0 +1,12 @@
+defaults:
+- rl_common
+- _self_
+actor_rollout_ref:
+  rollout:
+    gpu_memory_utilization: 0.24
+env:
+  env_name: Webshop
+  webshop:
+    use_small: true
+    human_goals: false
+    catalog_seed: 2026
