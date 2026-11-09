@@ -1,7 +1,9 @@
 # Environment-calibrated self-distillation
 
 Qwen2.5-3B / 7B 在 ALFWorld、WebShop 上的 SFT 材料、全参数 SFT 代码和 RL 流水线。
-四个入口统一为：**全成功组屏蔽 Teacher、Teacher 系数 0.02、只监督 action 命令 token、对称调制、joint R/S 系数 0.1**。
+离线标注统一为GPT-6.1 sol / max。两个3B材料中的旧名称经作者确认修正，`recorded_annotator`和metadata保留原始标签；token IDs及目标文本不变。所有SFT从原始Qwen2.5-Instruct开始，WebShop轨迹来自对应GRPO40策略。
+
+四个入口对应 ECOS 当前完整方法：**Teacher 系数 0.01、只监督 action 命令 token、command mean gap 调制逐 token gap、joint R/S 系数 0.1**。按作者确认，两个环境均不屏蔽全成功组，q_g=1。
 
 ## 内容
 
@@ -77,9 +79,10 @@ python scripts/train_rl.py --config webshop_7b --model runs/sft_webshop_7b/check
 失败后先保留该 attempt，再以相同命令追加 `--resume`，从实时最新完整检查点恢复，下一步为 saved+1。
 已有活跃进程或退出状态不明时，启动器不会重复提交。普通续训保持物理 rank 数；改变拓扑需要框架的完整原生转换路径，不能只加载模型重建 Adam。
 
-150 外层步、每步 16 任务 × G8、logical world 8 / mini256、主 token 预算 8608 / micro32、LR 1e-6、warmup 0、clip 0.2、KL 0.01、entropy 0.001。
-交互 max30 / history5，prompt2048 / response512；每步全状态保存，每 5 步及最终执行固定 128 验证。
-R/S prompt 上限 32256，原生上下文 32768，R/S 预算使用 `max(8608, padded_width)`，不静默截断 R/S。
+150 外层步、每步 16 任务 × G8、logical world 8、LR 1e-6、warmup 0、clip 0.2、KL 0.01、entropy 0.001。
+ALFWorld：mini256 / micro32，max30 / history5，Actor prompt2048 / response512，Reflection prompt8096，Teacher prompt4096。
+WebShop：mini64 / micro8，max15 / history2，Actor prompt4096 / response512，Reflection prompt16384，Teacher prompt6144，catalogue seed0。micro-batch是适配mini-batch的实现选择，论文未单独规定。
+每步全状态保存，每 5 步及最终执行固定 128 验证。原生上下文32768，R/S预算使用 `max(8608, padded_width)`，保留超长处理，不静默截断。
 3B/7B 的 vLLM 显存预算分别为 0.24/0.30，可用 `--vllm-memory-utilization` 按硬件调整，不改变训练数学。
 
 ## 方法
@@ -87,19 +90,20 @@ R/S prompt 上限 32256，原生上下文 32768，R/S 预算使用 `max(8608, pa
 使用现有 `action_command` 路径。令 `delta_action` 为本回合完整 action 命令各 token 的 Teacher / old Student log-probability 差值之和，同回合 action advantage 为 `A_action_turn`：
 
 ```text
-weight_t = action_mask_t × delta_action × [1 + sign(delta_action) × tanh(A_action_turn / 0.5)]
-Teacher outer coefficient = 0.02
+delta_l = log pi_T(y_l) - log pi_old(y_l)
+d = sum(delta_l over command content); mean_d = d / command_length
+m = 1 + sign(mean_d) × tanh(A_command / 0.5)
+weight_l = action_mask_l × m × delta_l
+Teacher outer coefficient = 0.01; q_g = 1
 ```
 
-Teacher 只作用于 `<action>...</action>` 内命令文字对应的原始 token，同一命令共享上述权重。think、独立标签和纯空白 token 不接收 Teacher 信号；仍遵守有效 response、完整命令及原始 token 边界的 action mask 检查。
+Teacher 只作用于 `<action>...</action>` 内命令文字对应的原始 token。同一命令共享调制系数m，各token保留自己的gap和正负方向；空命令没有eligible token。think、独立标签和纯空白 token 不接收 Teacher 信号；仍遵守有效 response、完整命令及原始 token 边界的 action mask 检查。
 不再额外乘 action gap 的符号。Teacher、old Student、权重和 advantage 均停止梯度；实际 Teacher 项使用保留的 signed PPO clipping。
 主 GRPO / KL / entropy 继续覆盖完整有效 response，Teacher 项保留原始 response 分母。SFT 和 R/S 的 Reflection / Skill 目标文本监督保持原配方。
 
-同题八条自然轨迹的**环境成功结局均为成功**时，整组 Actor Teacher 权重及 selected mask 清零。
-padding、副本和重复 turn 不增加轨迹数；7/8 成功仍保留 Teacher。
-屏蔽仅作用于 Actor Teacher，主 GRPO / KL / entropy、完整 response 分母和 R/S 不变。
+两个环境的 `skip_teacher_on_all_success=false`，包括8/8全成功组在内均保留Teacher监督。q_g的这项定义由作者在2026-11-10确认。padding、副本和重复turn仍按自然轨迹主键去重。
 
-R/S 使用 `A_step × raw action command gap`：Reflection 对轨迹有效 turn 取均值，Skill 对组内轨迹等权取均值，再各自 clip 到 ±3。
+R/S保留raw summed command gap。每条自然轨迹总权重相同，再均分到其eligible transitions；按状态对辅助advantage加权中心化，计算 `C_g=sum_i omega_i*(A_i-state_mean_A)*d_i` 并clip到±3。同一组的8个Reflection及1个Skill共享该group credit，两类序列损失各占0.5。
 R/S 系数 0.1、`seq-mean-token-mean`；主 loss 反向后累加 R/S 梯度，同一次 Adam，额外 optimizer 步为 0。
 线上 Reflection、Skill 和 Teacher 都来自策略本身，无外部 GPT、judge、Probe/CFI 或测试时更新。
 
@@ -132,5 +136,5 @@ python scripts/inspect_material.py
 python scripts/train_rl.py --config webshop_7b --model models/webshop_7b_sft600 --gpus 0,1,2,3,4,5,6,7 --dry-run
 ```
 
-本次整理的验证范围见 [docs/validation.md](docs/validation.md)。全成功屏蔽、调制及 joint R/S 沿用保留的实现；本次 action-only / 0.02 的四套入口经过本地检查，不表示已经重新完成 GPU 训练，也不据此声称方法收益。
+本次整理按2026-11-10提供的ECOS论文及作者确认对齐，验证范围见 [docs/validation.md](docs/validation.md)。ALFWorld最终评测覆盖seen140/unseen134，主指标为六类等权macro；WebShop每seed无放回抽128/500题，输出Success和Score。默认三个评测seed，报告样本标准差。本次未重跑GPU训练或完整环境评测。消融及本地GRPO入口不在本轮补充范围。
 上游来源与许可证见 [THIRD_PARTY.md](THIRD_PARTY.md)。

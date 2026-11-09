@@ -7,6 +7,8 @@ import sys
 import time
 
 SPLITS={'seen':('eval_in_distribution',140),'unseen':('eval_out_of_distribution',134)}
+CATEGORIES=('pick_and_place_simple','look_at_obj_in_light','pick_clean_then_place_in_recep',
+            'pick_heat_then_place_in_recep','pick_cool_then_place_in_recep','pick_two_obj_and_place')
 
 def read(p):return json.loads(Path(p).read_text())
 
@@ -33,7 +35,7 @@ def export(p):
     source=Path(p['checkpoint']);target=Path(p['model'])
     assert not target.exists() and (source/'CHECKPOINT_COMPLETE').read_text().strip()==str(p['source_step'])
     receipt=read(source/'STORAGE_ARCHIVE_VERIFIED.json');assert receipt['step']==p['source_step'] and receipt['all_bytes_equal'] and receipt['fsync']
-    paths=[source/'actor'/f'model_world_size_8_rank_{r}.pt' for r in range(p['world_size'])]
+    paths=[source/'actor'/f'model_world_size_{p["world_size"]}_rank_{r}.pt' for r in range(p['world_size'])]
     before=[(f.stat().st_size,f.stat().st_mtime_ns) for f in paths]
     shards=[torch.load(f,map_location='cpu',weights_only=False,mmap=True,pickle_module=SavedShardPickle) for f in paths]
     assert all(set(s)==set(shards[0]) for s in shards)
@@ -115,8 +117,19 @@ def validate(r,item,seed,p):
     return r
 
 def counts(rows):
+    """Paper accuracy is the equal-weight mean of the six category rates."""
     n=len(rows);won=sum(r['success'] for r in rows)
-    return dict(successes=won,total=n,accuracy=won/n if n else None)
+    categories={}
+    unknown={r['category'] for r in rows}-set(CATEGORIES)
+    if unknown:raise ValueError(f'Unknown ALFWorld task categories: {sorted(unknown)}')
+    for category in CATEGORIES:
+        selected=[r for r in rows if r['category']==category]
+        if not selected:raise ValueError(f'Missing ALFWorld evaluation category: {category}')
+        successes=sum(r['success'] for r in selected)
+        categories[category]=dict(successes=successes,total=len(selected),accuracy=successes/len(selected))
+    macro=sum(r['accuracy'] for r in categories.values())/len(CATEGORIES)
+    return dict(successes=won,total=n,accuracy=macro,macro_accuracy=macro,
+                micro_accuracy=won/n,categories=categories,metric='six_category_macro')
 
 def worker(p,worker_id):
     import fcntl,psutil

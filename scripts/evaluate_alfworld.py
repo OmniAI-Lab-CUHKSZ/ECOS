@@ -27,7 +27,8 @@ def main():
     seeds=[int(x) for x in args.seeds.split(',')]
     if len(set(seeds))!=len(seeds):raise ValueError('Duplicate evaluation seeds')
     plan=dict(root=str(root),repo=str(ROOT),checkpoint=exported['source'],model=str(args.model.resolve()),
-              workers=[dict(host=socket.gethostname(),gpu=args.gpu,uuid=None,seeds=seeds)])
+              workers=[dict(host=socket.gethostname(),gpu=args.gpu,uuid=None,seeds=seeds)],
+              metric='six_category_macro')
     saved=root/'plan.json'
     if saved.exists():
         if read(saved)!=plan:raise ValueError('Existing output belongs to a different model or evaluation setup')
@@ -40,7 +41,11 @@ def main():
     summary=dict(seeds=rows,optimizer_steps=0)
     for split in ['seen','unseen','total']:
         values=[r[split]['accuracy'] for r in rows]
-        summary[split]=dict(mean=statistics.mean(values),sample_std=statistics.stdev(values) if len(values)>1 else None)
+        micro=[r[split]['micro_accuracy'] for r in rows]
+        summary[split]=dict(metric='six_category_macro',mean=statistics.mean(values),
+                            sample_std=statistics.stdev(values) if len(values)>1 else None,
+                            micro_mean=statistics.mean(micro),
+                            micro_sample_std=statistics.stdev(micro) if len(micro)>1 else None)
     write(root/'summary.json',summary)
     print(json.dumps(summary,indent=2))
 

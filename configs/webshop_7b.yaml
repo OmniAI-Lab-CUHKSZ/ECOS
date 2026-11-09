@@ -1,12 +1,23 @@
 defaults:
 - rl_common
 - _self_
+data:
+  max_prompt_length: 4096
 actor_rollout_ref:
+  actor:
+    ppo_mini_batch_size: 64
+    ppo_micro_batch_size_per_gpu: 8
   rollout:
     gpu_memory_utilization: 0.3
+algorithm:
+  grsd:
+    reflect_max_prompt_length: 16384
+    teacher_max_prompt_length: 6144
 env:
   env_name: Webshop
+  max_steps: 15
+  history_length: 2
   webshop:
     use_small: true
     human_goals: false
-    catalog_seed: 2026
+    catalog_seed: 0

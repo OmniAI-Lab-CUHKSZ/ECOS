@@ -20,12 +20,12 @@ spec.loader.exec_module(actual)
 def test_all_four_profiles_share_current_method(profile):
     c=load_config(profile)
     s=c['algorithm']['selective_gigpo']
-    assert s['skip_teacher_on_all_success'] is True
+    assert s['skip_teacher_on_all_success'] is False
     assert s['actor_signal_scope']=='action_command'
     assert s['modulation_mode']=='symmetric_alignment'
     assert s['modulation_lambda']==1. and s['modulation_tau']==.5
     assert s['rs_reward_clip']==3.
-    assert c['algorithm']['route']['lambda_route']==.02
+    assert c['algorithm']['route']['lambda_route']==.01
     assert c['algorithm']['grsd']['reflect_loss_coef']==.1
     assert c['actor_rollout_ref']['actor']['rs_joint_update']
     assert not c['actor_rollout_ref']['model']['reflect_lora']['enabled']
@@ -33,7 +33,14 @@ def test_all_four_profiles_share_current_method(profile):
     assert c['env']['rollout']['n']==8
     assert c['data']['train_batch_size']==16
     assert c['actor_rollout_ref']['actor']['elastic_logical_world_size']==8
-    assert c['actor_rollout_ref']['actor']['ppo_mini_batch_size']==256
+    webshop=profile.startswith('webshop')
+    assert c['actor_rollout_ref']['actor']['ppo_mini_batch_size']==(64 if webshop else 256)
+    assert c['env']['max_steps']==(15 if webshop else 30)
+    assert c['env']['history_length']==(2 if webshop else 5)
+    assert c['data']['max_prompt_length']==(4096 if webshop else 2048)
+    assert c['algorithm']['grsd']['reflect_max_prompt_length']==(16384 if webshop else 8096)
+    assert c['algorithm']['grsd']['teacher_max_prompt_length']==(6144 if webshop else 4096)
+    if webshop:assert c['env']['webshop']['catalog_seed']==0
     assert c['actor_rollout_ref']['actor']['optim']['lr']==1e-6
     assert c['actor_rollout_ref']['actor']['entropy_coeff']==.001
     assert c['actor_rollout_ref']['actor']['kl_loss_coef']==.01
@@ -49,9 +56,9 @@ def test_real_hydra_composition_resolves_all_four_profiles(profile,monkeypatch):
     with initialize_config_dir(version_base=None,config_dir=str(ROOT/'configs')):
         config=compose(config_name=profile);OmegaConf.resolve(config)
         assert config.actor_rollout_ref.model.path=='/models/sft600'
-        assert config.algorithm.selective_gigpo.skip_teacher_on_all_success
+        assert not config.algorithm.selective_gigpo.skip_teacher_on_all_success
         assert config.algorithm.selective_gigpo.actor_signal_scope=='action_command'
-        assert config.algorithm.route.lambda_route==.02
+        assert config.algorithm.route.lambda_route==.01
         assert config.algorithm.grsd.reflect_loss_coef==.1
 
 
@@ -88,17 +95,17 @@ def test_action_only_teacher_and_original_response_denominator():
     weights, selected, raw_gap=actual.token_route(old+delta,old,action,response,adv,[True]*16,
         modulation_lambda=1.,modulation_tau=.5,actor_signal_scope='action_command',
         modulation_mode='symmetric_alignment')
-    # The signed command gap is shared only by its command tokens.
+    # The multiplier is shared, while the two command tokens keep opposite gaps.
     assert not weights[~action].any() and not selected[~action].any()
-    assert (weights[:,2:4]<0).all()
-    torch.testing.assert_close(weights[:,2],weights[:,3])
+    assert (weights[:,2]<0).all() and (weights[:,3]>0).all()
+    torch.testing.assert_close(weights[:,2],-3*weights[:,3])
     before=raw_gap.clone()
     skip=np.array([True]*8+[False]*8)
     weights, selected=actual.mask_all_success_teacher(weights,selected,skip)
     current=old.clone().requires_grad_()
-    loss=.02*(actual.selective_route_loss_terms(current,old,old+delta,weights,selected,.2,.2)*response).sum()/response.sum()
+    loss=.01*(actual.selective_route_loss_terms(current,old,old+delta,weights,selected,.2,.2)*response).sum()/response.sum()
     loss.backward()
-    torch.testing.assert_close(current.grad,-.02*weights/64)
+    torch.testing.assert_close(current.grad,-.01*weights/64)
     assert not current.grad[:8].any()
     assert not current.grad[~action].any()
     assert current.grad[8:,2:4].count_nonzero()==16

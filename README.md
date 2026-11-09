@@ -1,6 +1,4 @@
-# Environment-Calibrated Self-Distillation
-
-### Recursive self-improvement of language agents
+# ECOS: Environment-Calibrated On-Policy Self-Distillation for Language Agents
 
 SFT materials and training pipelines for **Qwen2.5-3B / 7B on ALFWorld and WebShop**.
 
@@ -19,7 +17,7 @@ At inference, only the trained Actor is used. Skill generation and Teacher scori
 
 ![Method overview](docs/images/overview.png)
 
-*Method overview from the manuscript. [Vector PDF](docs/figures/overview.pdf).* 
+*Figure 2 from the manuscript supplied on 10 November 2026.*
 
 ### Released method settings
 
@@ -28,34 +26,36 @@ All four profiles share the following settings:
 | Component | Setting |
 |---|---|
 | Teacher scope | Command-content tokens inside `<action>...</action>` |
-| Teacher coefficient | **0.02** |
-| All-success groups | Zero Actor Teacher weights and selected masks when all eight natural trajectories succeed |
-| Modulation | Signed command gap, calibrated by the same-turn environmental advantage |
+| Teacher coefficient | **0.01** |
+| Group mask | **q = 1 in both environments**; all-success groups retain Teacher supervision |
+| Modulation | One multiplier from the command's mean gap and same-turn environmental advantage; each token keeps its own gap |
 | Reflection / Skill coefficient | **0.1**, accumulated after the main backward pass into the same Adam update |
 | Main GRPO / KL / entropy | Full valid response; KL 0.01, entropy 0.001 |
 
-For command tokens $\mathcal A$, the detached gap and calibrated weight are
+For command content $\mathcal C$, the detached gaps and calibrated weights are
 
 $$
-d=\sum_{t\in\mathcal A}[\log\pi_T(y_t)-\log\pi_{\mathrm{old}}(y_t)],
-\qquad w_t=\mathbf 1[t\in\mathcal A]d\left[1+\operatorname{sign}(d)\tanh\left(\frac{A_{\mathrm{action}}}{0.5}\right)\right].
+\delta_\ell=\log\pi_T(y_\ell)-\log\pi_{\mathrm{old}}(y_\ell),\quad
+d=\sum_{\ell\in\mathcal C}\delta_\ell,\quad \bar d=d/|\mathcal C|,
+\qquad w_\ell=\mathbf 1[\ell\in\mathcal C]\delta_\ell
+\left[1+\operatorname{sign}(\bar d)\tanh\left(\frac{\hat A_{\mathrm{command}}}{0.5}\right)\right].
 $$
 
-The command-content tokens share this weight. Think text, standalone tags and whitespace-only tokens receive no Actor Teacher signal. Teacher loss retains the original response denominator and signed PPO clipping. A 7/8-success group remains eligible; padding and repeated turns do not count as additional trajectories. All-success masking leaves the main objective and R/S credit unchanged.
+The command-content tokens share the multiplier, while their individual gaps and signs are preserved. Empty command spans have zero mean gap and no eligible tokens. Reasoning, standalone tags and whitespace-only tokens receive no direct Teacher signal. Teacher loss retains the complete valid-response denominator and signed PPO clipping. The author clarified that the group mask is one in both environments; `skip_teacher_on_all_success=false` implements this choice.
 
-R/S credit uses **step advantage × raw command gap**, averaged over turns within each trajectory and equally over trajectories for the Skill, then clipped to ±3. R/S targets remain complete Reflection / Skill texts. See [the method and runtime guide](README_zh.md#方法).
+R/S credit uses the **raw summed command gap** with trajectory-equal transition weights and within-state centered advantages (Equations 16–20). The resulting group credit is clipped to ±3 and assigned to all eight Reflections and the Skill. Reflection and Skill losses each receive half the Analyzer weight and share the Actor's optimizer update. See [the method and runtime guide](README_zh.md#方法).
 
 ## Main results
 
-The table and curves below are reproduced from **manuscript v0.56**. They report existing paper experiments, separately from local validation of this release's unified action-only / 0.02 profiles. Protocols and machine-readable tables are in [docs/results.md](docs/results.md).
+The table and curves below are copied from the **ECOS manuscript supplied on 10 November 2026**. Ours reports three evaluation seeds per trained checkpoint; these are paper results, not new measurements from this code update. Protocols and machine-readable tables are in [docs/results.md](docs/results.md).
 
 ![Main comparison from the manuscript](docs/images/main-results.png)
 
-ALFWorld “Ours” reports the macro average over six seen-task categories (140 tasks). WebShop uses the paper's fixed 128-task panel and reports environment Score and exact Success. External comparison values retain their source aggregation.
+ALFWorld reports the macro average over six seen-task categories (140 tasks). WebShop draws 128 goals without replacement per evaluation seed and reports environment Score and exact Success. Methods with the same seed share the panel. External comparison values retain their source aggregation.
 
-![ALFWorld 3B training dynamics](docs/images/alfworld-training.png)
+![3B training dynamics on ALFWorld and WebShop](docs/images/alfworld-training.png)
 
-*Recorded training success and episode length; thick lines are 13-update centered means. [Vector PDF](docs/figures/alfworld-training.pdf).* 
+*Appendix Figure D.1: training success, modulated-action coverage, positive-credit skills and interaction length; dark lines are trailing 10-update means.*
 
 ## Installation
 
@@ -98,6 +98,8 @@ WebShop also needs the spaCy English model installed by `scripts/setup.sh`. See 
 
 Each set contains **200 task groups, 1,600 Reflections, 200 Skills and 1,600 natural trajectories**. Together they provide 7,200 SFT texts and 6,400 trajectories, with annotation messages and original token IDs. See [data/README.md](data/README.md).
 
+All offline annotations use **GPT-6.1 sol, maximum reasoning effort**, as confirmed by the author. Historical model labels remain recorded in the material metadata. Both model sizes start SFT from the original Qwen2.5-Instruct backbone; WebShop trajectories are collected from the corresponding GRPO40 policy.
+
 ### Stage 1: Reflection / Skill SFT
 
 ```bash
@@ -123,7 +125,16 @@ python scripts/train_rl.py \
 
 For WebShop, select `webshop_3b` or `webshop_7b` and replace `--alfworld-data` with `--webshop-assets "$WEBSHOP_ASSET_ROOT"`. The 7B profiles use their corresponding 7B SFT checkpoint.
 
-Shared defaults in [configs/rl_common.yaml](configs/rl_common.yaml): **150 updates, 16 groups × G8, logical world 8 / mini256, micro32 / main-token budget 8,608, LR 1e-6, warmup 0, clip 0.2**. Interactions use max30 / history5 and prompt2048 / response512. R/S prompts support 32,256 tokens with a 32,768 native context, without silent truncation. Every update saves complete training state; fixed 128-task validation runs every five updates and at the end.
+Shared defaults: **150 updates, 16 groups × G8, logical world 8, LR 1e-6, warmup 0, clip 0.2, KL 0.01, entropy 0.001**. Every update saves complete training state; fixed 128-task validation runs every five updates and at the end.
+
+| Setting | ALFWorld | WebShop |
+|---|---:|---:|
+| PPO mini-batch / micro-batch per GPU | 256 / 32 | 64 / 8 |
+| Maximum actions / history | 30 / 5 | 15 / 2 |
+| Actor prompt / response tokens | 2048 / 512 | 4096 / 512 |
+| Reflection / Teacher prompt tokens | 8096 / 4096 | 16384 / 6144 |
+
+The micro-batches are implementation choices compatible with the mini-batches; Table B.2 does not prescribe them. The native context remains 32,768 tokens. Overlength R/S input handling and complete-state saving are retained.
 
 ### Complete SFT → RL pipeline
 
@@ -156,7 +167,7 @@ python scripts/evaluate_webshop.py \
   --gpu 0 --seeds 0,1,2 --output runs/eval_webshop_3b
 ```
 
-The released evaluators use complete ALFWorld Seen140 + Unseen134 or the full WebShop 500-goal panel, with T0.4 / n1 / max30 / history5. They preserve per-task trajectories, final environment outcomes and seed-level aggregates. These defaults differ from the historical paper panels in [docs/results.md](docs/results.md).
+Both evaluators use T0.4 / top-p1 / top-k−1 / n1 and default to evaluation seeds 0,1,2. ALFWorld evaluates Seen140 + Unseen134 and reports per-category rates, six-category macro success, and micro success for reference. WebShop samples 128 of goals 0–499 with `random.Random(seed).sample`, fixes catalogue seed0, and reports Success (%) plus Score (mean normalized final environment score ×100). Per-seed goal IDs and trajectories are saved. Cross-seed variability uses the sample standard deviation. The documented sampler is reproducible; it does not assert recovery of unpublished historical panel IDs.
 
 ## Repository guide
 
@@ -183,7 +194,7 @@ python -m pytest tests -q
 python scripts/inspect_material.py
 ```
 
-Local checks exercise the actual Actor/R/S losses, action masks, all-success masking, signed modulation, joint gradients and storage/resume utilities. GPU training and full environment evaluations were not rerun while curating this release. See [docs/validation.md](docs/validation.md).
+Local checks exercise the actual Actor/R/S losses, per-token Teacher gaps, command-derived modulation, disabled all-success masking, joint gradients, seeded evaluation panels, metrics and storage/resume utilities. GPU training and full environment evaluations were not rerun during this update. This release supplies the four full-method profiles; ablation and local-GRPO launch recipes are outside this update. See [docs/validation.md](docs/validation.md).
 
 ## Acknowledgements and licenses
 

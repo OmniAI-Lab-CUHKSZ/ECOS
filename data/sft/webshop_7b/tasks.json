@@ -1,0 +1,1002 @@
+[
+  {
+    "group": "task000",
+    "task_key": "webshop-goal/1475",
+    "goal_index": 1475
+  },
+  {
+    "group": "task001",
+    "task_key": "webshop-goal/3117",
+    "goal_index": 3117
+  },
+  {
+    "group": "task002",
+    "task_key": "webshop-goal/4616",
+    "goal_index": 4616
+  },
+  {
+    "group": "task003",
+    "task_key": "webshop-goal/4692",
+    "goal_index": 4692
+  },
+  {
+    "group": "task004",
+    "task_key": "webshop-goal/5801",
+    "goal_index": 5801
+  },
+  {
+    "group": "task005",
+    "task_key": "webshop-goal/1340",
+    "goal_index": 1340
+  },
+  {
+    "group": "task006",
+    "task_key": "webshop-goal/2329",
+    "goal_index": 2329
+  },
+  {
+    "group": "task007",
+    "task_key": "webshop-goal/5423",
+    "goal_index": 5423
+  },
+  {
+    "group": "task008",
+    "task_key": "webshop-goal/5591",
+    "goal_index": 5591
+  },
+  {
+    "group": "task009",
+    "task_key": "webshop-goal/5059",
+    "goal_index": 5059
+  },
+  {
+    "group": "task010",
+    "task_key": "webshop-goal/3945",
+    "goal_index": 3945
+  },
+  {
+    "group": "task011",
+    "task_key": "webshop-goal/5190",
+    "goal_index": 5190
+  },
+  {
+    "group": "task012",
+    "task_key": "webshop-goal/4987",
+    "goal_index": 4987
+  },
+  {
+    "group": "task013",
+    "task_key": "webshop-goal/6484",
+    "goal_index": 6484
+  },
+  {
+    "group": "task014",
+    "task_key": "webshop-goal/6861",
+    "goal_index": 6861
+  },
+  {
+    "group": "task015",
+    "task_key": "webshop-goal/6792",
+    "goal_index": 6792
+  },
+  {
+    "group": "task016",
+    "task_key": "webshop-goal/4521",
+    "goal_index": 4521
+  },
+  {
+    "group": "task017",
+    "task_key": "webshop-goal/6652",
+    "goal_index": 6652
+  },
+  {
+    "group": "task018",
+    "task_key": "webshop-goal/6833",
+    "goal_index": 6833
+  },
+  {
+    "group": "task019",
+    "task_key": "webshop-goal/5304",
+    "goal_index": 5304
+  },
+  {
+    "group": "task020",
+    "task_key": "webshop-goal/4113",
+    "goal_index": 4113
+  },
+  {
+    "group": "task021",
+    "task_key": "webshop-goal/2465",
+    "goal_index": 2465
+  },
+  {
+    "group": "task022",
+    "task_key": "webshop-goal/520",
+    "goal_index": 520
+  },
+  {
+    "group": "task023",
+    "task_key": "webshop-goal/5531",
+    "goal_index": 5531
+  },
+  {
+    "group": "task024",
+    "task_key": "webshop-goal/1161",
+    "goal_index": 1161
+  },
+  {
+    "group": "task025",
+    "task_key": "webshop-goal/1407",
+    "goal_index": 1407
+  },
+  {
+    "group": "task026",
+    "task_key": "webshop-goal/2853",
+    "goal_index": 2853
+  },
+  {
+    "group": "task027",
+    "task_key": "webshop-goal/1303",
+    "goal_index": 1303
+  },
+  {
+    "group": "task028",
+    "task_key": "webshop-goal/4183",
+    "goal_index": 4183
+  },
+  {
+    "group": "task029",
+    "task_key": "webshop-goal/594",
+    "goal_index": 594
+  },
+  {
+    "group": "task030",
+    "task_key": "webshop-goal/6112",
+    "goal_index": 6112
+  },
+  {
+    "group": "task031",
+    "task_key": "webshop-goal/4516",
+    "goal_index": 4516
+  },
+  {
+    "group": "task032",
+    "task_key": "webshop-goal/6065",
+    "goal_index": 6065
+  },
+  {
+    "group": "task033",
+    "task_key": "webshop-goal/3074",
+    "goal_index": 3074
+  },
+  {
+    "group": "task034",
+    "task_key": "webshop-goal/2222",
+    "goal_index": 2222
+  },
+  {
+    "group": "task035",
+    "task_key": "webshop-goal/3754",
+    "goal_index": 3754
+  },
+  {
+    "group": "task036",
+    "task_key": "webshop-goal/2560",
+    "goal_index": 2560
+  },
+  {
+    "group": "task037",
+    "task_key": "webshop-goal/3348",
+    "goal_index": 3348
+  },
+  {
+    "group": "task038",
+    "task_key": "webshop-goal/3421",
+    "goal_index": 3421
+  },
+  {
+    "group": "task039",
+    "task_key": "webshop-goal/3583",
+    "goal_index": 3583
+  },
+  {
+    "group": "task040",
+    "task_key": "webshop-goal/6610",
+    "goal_index": 6610
+  },
+  {
+    "group": "task041",
+    "task_key": "webshop-goal/4707",
+    "goal_index": 4707
+  },
+  {
+    "group": "task042",
+    "task_key": "webshop-goal/5724",
+    "goal_index": 5724
+  },
+  {
+    "group": "task043",
+    "task_key": "webshop-goal/1125",
+    "goal_index": 1125
+  },
+  {
+    "group": "task044",
+    "task_key": "webshop-goal/6423",
+    "goal_index": 6423
+  },
+  {
+    "group": "task045",
+    "task_key": "webshop-goal/3288",
+    "goal_index": 3288
+  },
+  {
+    "group": "task046",
+    "task_key": "webshop-goal/1234",
+    "goal_index": 1234
+  },
+  {
+    "group": "task047",
+    "task_key": "webshop-goal/5066",
+    "goal_index": 5066
+  },
+  {
+    "group": "task048",
+    "task_key": "webshop-goal/4907",
+    "goal_index": 4907
+  },
+  {
+    "group": "task049",
+    "task_key": "webshop-goal/2893",
+    "goal_index": 2893
+  },
+  {
+    "group": "task050",
+    "task_key": "webshop-goal/2856",
+    "goal_index": 2856
+  },
+  {
+    "group": "task051",
+    "task_key": "webshop-goal/4247",
+    "goal_index": 4247
+  },
+  {
+    "group": "task052",
+    "task_key": "webshop-goal/1654",
+    "goal_index": 1654
+  },
+  {
+    "group": "task053",
+    "task_key": "webshop-goal/5782",
+    "goal_index": 5782
+  },
+  {
+    "group": "task054",
+    "task_key": "webshop-goal/6266",
+    "goal_index": 6266
+  },
+  {
+    "group": "task055",
+    "task_key": "webshop-goal/6368",
+    "goal_index": 6368
+  },
+  {
+    "group": "task056",
+    "task_key": "webshop-goal/5230",
+    "goal_index": 5230
+  },
+  {
+    "group": "task057",
+    "task_key": "webshop-goal/3031",
+    "goal_index": 3031
+  },
+  {
+    "group": "task058",
+    "task_key": "webshop-goal/702",
+    "goal_index": 702
+  },
+  {
+    "group": "task059",
+    "task_key": "webshop-goal/6323",
+    "goal_index": 6323
+  },
+  {
+    "group": "task060",
+    "task_key": "webshop-goal/3521",
+    "goal_index": 3521
+  },
+  {
+    "group": "task061",
+    "task_key": "webshop-goal/3478",
+    "goal_index": 3478
+  },
+  {
+    "group": "task062",
+    "task_key": "webshop-goal/4277",
+    "goal_index": 4277
+  },
+  {
+    "group": "task063",
+    "task_key": "webshop-goal/3958",
+    "goal_index": 3958
+  },
+  {
+    "group": "task064",
+    "task_key": "webshop-goal/1242",
+    "goal_index": 1242
+  },
+  {
+    "group": "task065",
+    "task_key": "webshop-goal/3766",
+    "goal_index": 3766
+  },
+  {
+    "group": "task066",
+    "task_key": "webshop-goal/5298",
+    "goal_index": 5298
+  },
+  {
+    "group": "task067",
+    "task_key": "webshop-goal/5042",
+    "goal_index": 5042
+  },
+  {
+    "group": "task068",
+    "task_key": "webshop-goal/4583",
+    "goal_index": 4583
+  },
+  {
+    "group": "task069",
+    "task_key": "webshop-goal/1453",
+    "goal_index": 1453
+  },
+  {
+    "group": "task070",
+    "task_key": "webshop-goal/3985",
+    "goal_index": 3985
+  },
+  {
+    "group": "task071",
+    "task_key": "webshop-goal/4648",
+    "goal_index": 4648
+  },
+  {
+    "group": "task072",
+    "task_key": "webshop-goal/6645",
+    "goal_index": 6645
+  },
+  {
+    "group": "task073",
+    "task_key": "webshop-goal/5416",
+    "goal_index": 5416
+  },
+  {
+    "group": "task074",
+    "task_key": "webshop-goal/4522",
+    "goal_index": 4522
+  },
+  {
+    "group": "task075",
+    "task_key": "webshop-goal/3761",
+    "goal_index": 3761
+  },
+  {
+    "group": "task076",
+    "task_key": "webshop-goal/4797",
+    "goal_index": 4797
+  },
+  {
+    "group": "task077",
+    "task_key": "webshop-goal/2618",
+    "goal_index": 2618
+  },
+  {
+    "group": "task078",
+    "task_key": "webshop-goal/3940",
+    "goal_index": 3940
+  },
+  {
+    "group": "task079",
+    "task_key": "webshop-goal/5120",
+    "goal_index": 5120
+  },
+  {
+    "group": "task080",
+    "task_key": "webshop-goal/4425",
+    "goal_index": 4425
+  },
+  {
+    "group": "task081",
+    "task_key": "webshop-goal/4702",
+    "goal_index": 4702
+  },
+  {
+    "group": "task082",
+    "task_key": "webshop-goal/4743",
+    "goal_index": 4743
+  },
+  {
+    "group": "task083",
+    "task_key": "webshop-goal/707",
+    "goal_index": 707
+  },
+  {
+    "group": "task084",
+    "task_key": "webshop-goal/5214",
+    "goal_index": 5214
+  },
+  {
+    "group": "task085",
+    "task_key": "webshop-goal/2339",
+    "goal_index": 2339
+  },
+  {
+    "group": "task086",
+    "task_key": "webshop-goal/6773",
+    "goal_index": 6773
+  },
+  {
+    "group": "task087",
+    "task_key": "webshop-goal/1556",
+    "goal_index": 1556
+  },
+  {
+    "group": "task088",
+    "task_key": "webshop-goal/900",
+    "goal_index": 900
+  },
+  {
+    "group": "task089",
+    "task_key": "webshop-goal/6272",
+    "goal_index": 6272
+  },
+  {
+    "group": "task090",
+    "task_key": "webshop-goal/4786",
+    "goal_index": 4786
+  },
+  {
+    "group": "task091",
+    "task_key": "webshop-goal/5992",
+    "goal_index": 5992
+  },
+  {
+    "group": "task092",
+    "task_key": "webshop-goal/6376",
+    "goal_index": 6376
+  },
+  {
+    "group": "task093",
+    "task_key": "webshop-goal/5597",
+    "goal_index": 5597
+  },
+  {
+    "group": "task094",
+    "task_key": "webshop-goal/4017",
+    "goal_index": 4017
+  },
+  {
+    "group": "task095",
+    "task_key": "webshop-goal/4350",
+    "goal_index": 4350
+  },
+  {
+    "group": "task096",
+    "task_key": "webshop-goal/1666",
+    "goal_index": 1666
+  },
+  {
+    "group": "task097",
+    "task_key": "webshop-goal/4449",
+    "goal_index": 4449
+  },
+  {
+    "group": "task098",
+    "task_key": "webshop-goal/2375",
+    "goal_index": 2375
+  },
+  {
+    "group": "task099",
+    "task_key": "webshop-goal/1499",
+    "goal_index": 1499
+  },
+  {
+    "group": "task100",
+    "task_key": "webshop-goal/5633",
+    "goal_index": 5633
+  },
+  {
+    "group": "task101",
+    "task_key": "webshop-goal/6240",
+    "goal_index": 6240
+  },
+  {
+    "group": "task102",
+    "task_key": "webshop-goal/4242",
+    "goal_index": 4242
+  },
+  {
+    "group": "task103",
+    "task_key": "webshop-goal/6023",
+    "goal_index": 6023
+  },
+  {
+    "group": "task104",
+    "task_key": "webshop-goal/4345",
+    "goal_index": 4345
+  },
+  {
+    "group": "task105",
+    "task_key": "webshop-goal/6353",
+    "goal_index": 6353
+  },
+  {
+    "group": "task106",
+    "task_key": "webshop-goal/4969",
+    "goal_index": 4969
+  },
+  {
+    "group": "task107",
+    "task_key": "webshop-goal/2556",
+    "goal_index": 2556
+  },
+  {
+    "group": "task108",
+    "task_key": "webshop-goal/5085",
+    "goal_index": 5085
+  },
+  {
+    "group": "task109",
+    "task_key": "webshop-goal/3793",
+    "goal_index": 3793
+  },
+  {
+    "group": "task110",
+    "task_key": "webshop-goal/5986",
+    "goal_index": 5986
+  },
+  {
+    "group": "task111",
+    "task_key": "webshop-goal/3020",
+    "goal_index": 3020
+  },
+  {
+    "group": "task112",
+    "task_key": "webshop-goal/4990",
+    "goal_index": 4990
+  },
+  {
+    "group": "task113",
+    "task_key": "webshop-goal/5799",
+    "goal_index": 5799
+  },
+  {
+    "group": "task114",
+    "task_key": "webshop-goal/4611",
+    "goal_index": 4611
+  },
+  {
+    "group": "task115",
+    "task_key": "webshop-goal/6220",
+    "goal_index": 6220
+  },
+  {
+    "group": "task116",
+    "task_key": "webshop-goal/4423",
+    "goal_index": 4423
+  },
+  {
+    "group": "task117",
+    "task_key": "webshop-goal/3792",
+    "goal_index": 3792
+  },
+  {
+    "group": "task118",
+    "task_key": "webshop-goal/4047",
+    "goal_index": 4047
+  },
+  {
+    "group": "task119",
+    "task_key": "webshop-goal/2159",
+    "goal_index": 2159
+  },
+  {
+    "group": "task120",
+    "task_key": "webshop-goal/2911",
+    "goal_index": 2911
+  },
+  {
+    "group": "task121",
+    "task_key": "webshop-goal/2703",
+    "goal_index": 2703
+  },
+  {
+    "group": "task122",
+    "task_key": "webshop-goal/575",
+    "goal_index": 575
+  },
+  {
+    "group": "task123",
+    "task_key": "webshop-goal/771",
+    "goal_index": 771
+  },
+  {
+    "group": "task124",
+    "task_key": "webshop-goal/1727",
+    "goal_index": 1727
+  },
+  {
+    "group": "task125",
+    "task_key": "webshop-goal/5871",
+    "goal_index": 5871
+  },
+  {
+    "group": "task126",
+    "task_key": "webshop-goal/5392",
+    "goal_index": 5392
+  },
+  {
+    "group": "task127",
+    "task_key": "webshop-goal/4253",
+    "goal_index": 4253
+  },
+  {
+    "group": "task128",
+    "task_key": "webshop-goal/4783",
+    "goal_index": 4783
+  },
+  {
+    "group": "task129",
+    "task_key": "webshop-goal/4510",
+    "goal_index": 4510
+  },
+  {
+    "group": "task130",
+    "task_key": "webshop-goal/3448",
+    "goal_index": 3448
+  },
+  {
+    "group": "task131",
+    "task_key": "webshop-goal/2137",
+    "goal_index": 2137
+  },
+  {
+    "group": "task132",
+    "task_key": "webshop-goal/2630",
+    "goal_index": 2630
+  },
+  {
+    "group": "task133",
+    "task_key": "webshop-goal/6174",
+    "goal_index": 6174
+  },
+  {
+    "group": "task134",
+    "task_key": "webshop-goal/4477",
+    "goal_index": 4477
+  },
+  {
+    "group": "task135",
+    "task_key": "webshop-goal/4322",
+    "goal_index": 4322
+  },
+  {
+    "group": "task136",
+    "task_key": "webshop-goal/4688",
+    "goal_index": 4688
+  },
+  {
+    "group": "task137",
+    "task_key": "webshop-goal/6780",
+    "goal_index": 6780
+  },
+  {
+    "group": "task138",
+    "task_key": "webshop-goal/4572",
+    "goal_index": 4572
+  },
+  {
+    "group": "task139",
+    "task_key": "webshop-goal/4057",
+    "goal_index": 4057
+  },
+  {
+    "group": "task140",
+    "task_key": "webshop-goal/5069",
+    "goal_index": 5069
+  },
+  {
+    "group": "task141",
+    "task_key": "webshop-goal/5938",
+    "goal_index": 5938
+  },
+  {
+    "group": "task142",
+    "task_key": "webshop-goal/775",
+    "goal_index": 775
+  },
+  {
+    "group": "task143",
+    "task_key": "webshop-goal/2876",
+    "goal_index": 2876
+  },
+  {
+    "group": "task144",
+    "task_key": "webshop-goal/3094",
+    "goal_index": 3094
+  },
+  {
+    "group": "task145",
+    "task_key": "webshop-goal/4249",
+    "goal_index": 4249
+  },
+  {
+    "group": "task146",
+    "task_key": "webshop-goal/1305",
+    "goal_index": 1305
+  },
+  {
+    "group": "task147",
+    "task_key": "webshop-goal/4091",
+    "goal_index": 4091
+  },
+  {
+    "group": "task148",
+    "task_key": "webshop-goal/6147",
+    "goal_index": 6147
+  },
+  {
+    "group": "task149",
+    "task_key": "webshop-goal/6369",
+    "goal_index": 6369
+  },
+  {
+    "group": "task150",
+    "task_key": "webshop-goal/4720",
+    "goal_index": 4720
+  },
+  {
+    "group": "task151",
+    "task_key": "webshop-goal/2620",
+    "goal_index": 2620
+  },
+  {
+    "group": "task152",
+    "task_key": "webshop-goal/4210",
+    "goal_index": 4210
+  },
+  {
+    "group": "task153",
+    "task_key": "webshop-goal/1999",
+    "goal_index": 1999
+  },
+  {
+    "group": "task154",
+    "task_key": "webshop-goal/3987",
+    "goal_index": 3987
+  },
+  {
+    "group": "task155",
+    "task_key": "webshop-goal/6463",
+    "goal_index": 6463
+  },
+  {
+    "group": "task156",
+    "task_key": "webshop-goal/1026",
+    "goal_index": 1026
+  },
+  {
+    "group": "task157",
+    "task_key": "webshop-goal/5812",
+    "goal_index": 5812
+  },
+  {
+    "group": "task158",
+    "task_key": "webshop-goal/2682",
+    "goal_index": 2682
+  },
+  {
+    "group": "task159",
+    "task_key": "webshop-goal/3532",
+    "goal_index": 3532
+  },
+  {
+    "group": "task160",
+    "task_key": "webshop-goal/1291",
+    "goal_index": 1291
+  },
+  {
+    "group": "task161",
+    "task_key": "webshop-goal/2094",
+    "goal_index": 2094
+  },
+  {
+    "group": "task162",
+    "task_key": "webshop-goal/6623",
+    "goal_index": 6623
+  },
+  {
+    "group": "task163",
+    "task_key": "webshop-goal/3869",
+    "goal_index": 3869
+  },
+  {
+    "group": "task164",
+    "task_key": "webshop-goal/1698",
+    "goal_index": 1698
+  },
+  {
+    "group": "task165",
+    "task_key": "webshop-goal/4181",
+    "goal_index": 4181
+  },
+  {
+    "group": "task166",
+    "task_key": "webshop-goal/614",
+    "goal_index": 614
+  },
+  {
+    "group": "task167",
+    "task_key": "webshop-goal/1255",
+    "goal_index": 1255
+  },
+  {
+    "group": "task168",
+    "task_key": "webshop-goal/501",
+    "goal_index": 501
+  },
+  {
+    "group": "task169",
+    "task_key": "webshop-goal/4196",
+    "goal_index": 4196
+  },
+  {
+    "group": "task170",
+    "task_key": "webshop-goal/5256",
+    "goal_index": 5256
+  },
+  {
+    "group": "task171",
+    "task_key": "webshop-goal/4977",
+    "goal_index": 4977
+  },
+  {
+    "group": "task172",
+    "task_key": "webshop-goal/1180",
+    "goal_index": 1180
+  },
+  {
+    "group": "task173",
+    "task_key": "webshop-goal/5498",
+    "goal_index": 5498
+  },
+  {
+    "group": "task174",
+    "task_key": "webshop-goal/2128",
+    "goal_index": 2128
+  },
+  {
+    "group": "task175",
+    "task_key": "webshop-goal/2530",
+    "goal_index": 2530
+  },
+  {
+    "group": "task176",
+    "task_key": "webshop-goal/1489",
+    "goal_index": 1489
+  },
+  {
+    "group": "task177",
+    "task_key": "webshop-goal/5587",
+    "goal_index": 5587
+  },
+  {
+    "group": "task178",
+    "task_key": "webshop-goal/865",
+    "goal_index": 865
+  },
+  {
+    "group": "task179",
+    "task_key": "webshop-goal/6659",
+    "goal_index": 6659
+  },
+  {
+    "group": "task180",
+    "task_key": "webshop-goal/4976",
+    "goal_index": 4976
+  },
+  {
+    "group": "task181",
+    "task_key": "webshop-goal/2699",
+    "goal_index": 2699
+  },
+  {
+    "group": "task182",
+    "task_key": "webshop-goal/5976",
+    "goal_index": 5976
+  },
+  {
+    "group": "task183",
+    "task_key": "webshop-goal/6706",
+    "goal_index": 6706
+  },
+  {
+    "group": "task184",
+    "task_key": "webshop-goal/5705",
+    "goal_index": 5705
+  },
+  {
+    "group": "task185",
+    "task_key": "webshop-goal/3426",
+    "goal_index": 3426
+  },
+  {
+    "group": "task186",
+    "task_key": "webshop-goal/1767",
+    "goal_index": 1767
+  },
+  {
+    "group": "task187",
+    "task_key": "webshop-goal/542",
+    "goal_index": 542
+  },
+  {
+    "group": "task188",
+    "task_key": "webshop-goal/3067",
+    "goal_index": 3067
+  },
+  {
+    "group": "task189",
+    "task_key": "webshop-goal/5944",
+    "goal_index": 5944
+  },
+  {
+    "group": "task190",
+    "task_key": "webshop-goal/5276",
+    "goal_index": 5276
+  },
+  {
+    "group": "task191",
+    "task_key": "webshop-goal/5204",
+    "goal_index": 5204
+  },
+  {
+    "group": "task192",
+    "task_key": "webshop-goal/6803",
+    "goal_index": 6803
+  },
+  {
+    "group": "task193",
+    "task_key": "webshop-goal/4530",
+    "goal_index": 4530
+  },
+  {
+    "group": "task194",
+    "task_key": "webshop-goal/6150",
+    "goal_index": 6150
+  },
+  {
+    "group": "task195",
+    "task_key": "webshop-goal/6402",
+    "goal_index": 6402
+  },
+  {
+    "group": "task196",
+    "task_key": "webshop-goal/1604",
+    "goal_index": 1604
+  },
+  {
+    "group": "task197",
+    "task_key": "webshop-goal/4971",
+    "goal_index": 4971
+  },
+  {
+    "group": "task198",
+    "task_key": "webshop-goal/2326",
+    "goal_index": 2326
+  },
+  {
+    "group": "task199",
+    "task_key": "webshop-goal/4374",
+    "goal_index": 4374
+  }
+]

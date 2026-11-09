@@ -185,7 +185,7 @@ algorithm:
     max_num_gen_batches: 10
   route:
     mode: selective_gigpo
-    lambda_route: 0.02
+    lambda_route: 0.01
     rms_normalize: false
   selective_gigpo:
     advantage_estimator: bepo_unified_obs_action20
@@ -198,10 +198,10 @@ algorithm:
     modulation_lambda: 1.0
     modulation_tau: 0.5
     rs_reward_clip: 3.0
-    skip_teacher_on_all_success: true
+    skip_teacher_on_all_success: false
   grsd:
     enabled: true
-    reflect_max_prompt_length: 32256
+    reflect_max_prompt_length: 8096
     teacher_max_prompt_length: 4096
     reflect_loss_coef: 0.1
     reflect_do_sample: true
@@ -274,5 +274,5 @@ env:
   webshop:
     use_small: true
     human_goals: false
-    catalog_seed: 2026
+    catalog_seed: 0
     worker_node_ip: null

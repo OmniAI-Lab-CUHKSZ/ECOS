@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "response-rs-self-distillation"
-version = "0.3.0"
+version = "0.4.0"
 description = "Action-command Teacher supervision and joint Reflection/Skill updates for ALFWorld and WebShop"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"

@@ -25,7 +25,7 @@ def test_command_modulation_keeps_signed_gap_and_has_no_think_gradient(gap,advan
     weights,selected,raw=actual.token_route(delta,torch.zeros_like(delta),action,response,[advantage],[True],
         1.,.5,actor_signal_scope='action_command',modulation_mode='symmetric_alignment')
     coefficient=gap*(1+np.sign(gap)*np.tanh(advantage/.5))
-    torch.testing.assert_close(weights,torch.tensor([[0.,coefficient,coefficient,0.]],dtype=torch.float64))
+    torch.testing.assert_close(weights,torch.tensor([[0.,coefficient*.75,coefficient*.25,0.]],dtype=torch.float64))
     assert not selected[~action].any()
     changed=delta.clone();changed[:,0]*=-500
     after=actual.token_route(changed,torch.zeros_like(delta),action,response,[advantage],[True],
@@ -46,7 +46,7 @@ def test_real_action_parser_excludes_think_tags_whitespace_and_incomplete_comman
     assert not compute_action_mask(Tokenizer(),response,incomplete_mask).any()
 
 
-def payload():
+def payload(skip_all_success=False):
     rows=[dict(group=str(i//8),trajectory=str(i%8),turn=0,outcome=float(i!=15),
                anchor='state',action='look',reward=float(i!=15),valid=True) for i in range(16)]
     delta=torch.tensor([[50.,-.3,.1,200.]]*16,dtype=torch.float64)
@@ -55,30 +55,33 @@ def payload():
     advantage=np.linspace(-.5,.5,16)
     weights,selected,gap=actual.token_route(delta,torch.zeros_like(delta),action,response,advantage,[True]*16,
         1.,.5,actor_signal_scope='action_command',modulation_mode='symmetric_alignment')
-    skipped,_=actual.all_success_group_rows(rows,8)
+    all_success,_=actual.all_success_group_rows(rows,8)
+    skipped=all_success if skip_all_success else np.zeros(len(rows),dtype=bool)
     weights,selected=actual.mask_all_success_teacher(weights,selected,skipped)
     return dict(actor_signal_scope=np.array('action_command'),modulation_mode=np.array('symmetric_alignment'),
-        modulation_lambda=np.array(1.),modulation_tau=np.array(.5),route_loss_coef=np.array(.02),
-        skip_teacher_on_all_success=np.array(True),teacher_skipped_rows=skipped,
+        modulation_lambda=np.array(1.),modulation_tau=np.array(.5),route_loss_coef=np.array(.01),
+        skip_teacher_on_all_success=np.array(skip_all_success),teacher_skipped_rows=skipped,
         rows_json=np.array(json.dumps(rows)),raw_teacher_token_gap=delta.numpy(),raw_command_gap=gap.numpy(),
-        raw_actor_gap=(gap[:,None]*action).numpy(),actor_token_weights=weights.numpy(),
+        raw_actor_gap=(delta*action).numpy(),actor_token_weights=weights.numpy(),
         actor_selected_mask=selected.numpy(),actor_eligible_mask=action.numpy(),
         actor_response_mask=response.numpy(),action_token_mask=action.numpy(),advantage=advantage)
 
 
-def test_observer_accepts_actual_action_route_and_8of8_skip():
-    result=verify_action_teacher_signals(payload())
-    assert result['nonaction_nonzero_tokens']==0 and result['action_nonzero_tokens']==16
+@pytest.mark.parametrize('skip_all_success',[False,True])
+def test_observer_checks_token_gaps_and_configured_group_mask(skip_all_success):
+    result=verify_action_teacher_signals(payload(skip_all_success))
+    assert result['nonaction_nonzero_tokens']==0 and result['action_nonzero_tokens']==(16 if skip_all_success else 32)
     assert result['teacher_group_counts']==dict(all_success=1,all_fail=0,mixed=1)
+    assert result['per_token_gap_verified'] and result['shared_command_mean_multiplier_verified']
 
 
 @pytest.mark.parametrize('change',['think_signal','skipped_group_signal','old_scope','old_coefficient'])
 def test_observer_rejects_wrong_scope_coefficient_or_mask(change):
-    signal=copy.deepcopy(payload())
+    signal=copy.deepcopy(payload(skip_all_success=True))
     if change=='think_signal':signal['actor_token_weights'][8,0]=1.
     if change=='skipped_group_signal':signal['actor_token_weights'][0,1]=1.
     if change=='old_scope':signal['actor_signal_scope']=np.array('response_token')
-    if change=='old_coefficient':signal['route_loss_coef']=np.array(.01)
+    if change=='old_coefficient':signal['route_loss_coef']=np.array(.02)
     with pytest.raises(AssertionError):verify_action_teacher_signals(signal)
 
 
@@ -91,7 +94,7 @@ def test_actual_trainer_saves_action_arrays_used_by_native_observer(tmp_path):
     tensors=lambda k:torch.as_tensor(signal[k])
     self=SimpleNamespace(global_steps=1,selective_actor_signal_scope='action_command',
         selective_modulation_mode='symmetric_alignment',selective_lambda=1.,selective_max_factor=16.,
-        selective_tau=.5,route_lambda=.02,skip_teacher_on_all_success=True)
+        selective_tau=.5,route_lambda=.01,skip_teacher_on_all_success=False)
     namespace=dict(np=np,json=json,os=__import__('os'),self=self,diagnostic_dir=str(tmp_path),
         selective_data_rows=json.loads(str(signal['rows_json'])),observation_embeddings=np.zeros((16,2)),
         batch=SimpleNamespace(batch={'old_log_probs':torch.zeros(16,4,dtype=torch.float64)},
@@ -99,10 +102,34 @@ def test_actual_trainer_saves_action_arrays_used_by_native_observer(tmp_path):
         selective_adv=signal['advantage'],raw_gap=signal['raw_command_gap'],
         skipped_teacher_rows=signal['teacher_skipped_rows'],eligible_mask=tensors('actor_eligible_mask'),
         action_mask=tensors('action_token_mask'),route_token_mask=tensors('actor_response_mask'),
-        teacher_log_probs=tensors('raw_teacher_token_gap'),raw_actor_gap=tensors('raw_command_gap')[:,None],
+        teacher_log_probs=tensors('raw_teacher_token_gap'),raw_actor_gap=tensors('raw_teacher_token_gap'),
         actor_eligible_mask=tensors('actor_eligible_mask'),route_gate=tensors('actor_token_weights'),
         selected_mask=tensors('actor_selected_mask'),response_scope=False)
     exec(compile(ast.fix_missing_locations(ast.Module(body=[ast.Expr(value=calls[0])],type_ignores=[])),str(path),'exec'),namespace)
     with np.load(tmp_path/'step1_natural_signals.npz',allow_pickle=False) as saved:
         result=verify_action_teacher_signals(saved)
-    assert result['actual_scope']=='action_command' and result['route_loss_coef']==.02
+    assert result['actual_scope']=='action_command' and result['route_loss_coef']==.01
+
+
+def test_shared_multiplier_preserves_opposite_token_signs_and_raw_rs_gap():
+    delta=torch.tensor([[4.,-.3,.1,0.]],dtype=torch.float64)
+    action=torch.tensor([[0,1,1,0]],dtype=torch.bool)
+    response=torch.tensor([[1,1,1,0]],dtype=torch.bool)
+    factor=1.-np.tanh(1.)
+    for scope in ['action_command','response_token']:
+        weights,_,raw=actual.token_route(delta,torch.zeros_like(delta),action,response,[.5],[True],
+            1.,.5,actor_signal_scope=scope,modulation_mode='symmetric_alignment')
+        expected=delta*factor*(action if scope=='action_command' else response)
+        torch.testing.assert_close(weights,expected)
+        torch.testing.assert_close(raw,torch.tensor([-.2],dtype=torch.float64))
+        assert weights[0,1]<0<weights[0,2]
+
+
+def test_teacher_length_scaling_is_tokenwise_and_weights_are_frozen():
+    delta=torch.full((2,8),.1,dtype=torch.float64,requires_grad=True)
+    action=torch.tensor([[1,1,0,0,0,0,0,0],[1,1,1,1,1,1,1,1]],dtype=torch.bool)
+    weights,_,raw=actual.token_route(delta,torch.zeros_like(delta),action,action,[0.,0.],[True,True],
+        1.,.5,modulation_mode='symmetric_alignment')
+    torch.testing.assert_close(weights.sum(-1),torch.tensor([.2,.8],dtype=torch.float64))
+    torch.testing.assert_close(raw,torch.tensor([.2,.8],dtype=torch.float64))
+    assert not weights.requires_grad and not raw.requires_grad

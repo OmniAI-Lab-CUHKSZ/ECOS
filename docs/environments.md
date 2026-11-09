@@ -17,7 +17,7 @@ alfworld-download
 
 ## WebShop
 
-安装 Java 11 并设置 `JAVA_HOME`，安装 spaCy 的 `en_core_web_sm`。默认是原实验使用的1k商品环境、合成目标、catalog seed2026。
+安装 Java 11 并设置 `JAVA_HOME`，安装 spaCy 的 `en_core_web_sm`。默认是原实验使用的1k商品环境、合成目标、catalogue seed0。
 准备目录：
 
 ```text

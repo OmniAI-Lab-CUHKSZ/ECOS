@@ -1,41 +1,129 @@
 {
-  "release": "0.3.0",
-  "date": "2026-10-25",
+  "release": "0.4.0",
+  "date": "2026-11-10",
+  "paper": "ECOS, author-supplied manuscript dated 2026-11-10",
   "python_source_files": 157,
   "tests": {
-    "passed": 121,
-    "skipped": 2,
+    "tests": 129,
     "failures": 0,
-    "errors": 0
+    "errors": 0,
+    "skipped": 2,
+    "passed": 127,
+    "platform": "Windows; Python3.11; CPU PyTorch",
+    "command": "python -m pytest -p no:cacheprovider -q",
+    "skipped_reason": "Two multiprocess CPU FSDP collective tests require Linux"
   },
-  "dry_runs": 12,
-  "sft_tasks": 800,
-  "sft_texts": 7200,
-  "natural_trajectories": 6400,
-  "all_packaged_prompt_ids_response_ids_text_messages_match_original": true,
-  "streamed_adamw_cpu_parameters_moments_counters_exact": true,
-  "cpu_test_runtime": {
-    "os": "Windows",
-    "python": "3.11.15",
-    "torch": "2.13.0+cpu"
+  "entrypoints": {
+    "alfworld_3b": {
+      "rl": {
+        "exit_code": 0
+      },
+      "sft": {
+        "exit_code": 0
+      }
+    },
+    "alfworld_7b": {
+      "rl": {
+        "exit_code": 0
+      },
+      "sft": {
+        "exit_code": 0
+      }
+    },
+    "webshop_3b": {
+      "rl": {
+        "exit_code": 0
+      },
+      "sft": {
+        "exit_code": 0
+      }
+    },
+    "webshop_7b": {
+      "rl": {
+        "exit_code": 0
+      },
+      "sft": {
+        "exit_code": 0
+      }
+    }
   },
-  "this_release_reran_gpu_training": false,
-  "model_weights_included": false,
   "teacher": {
     "actor_signal_scope": "action_command",
-    "outer_coefficient": 0.02,
-    "skip_on_all_success": true,
+    "outer_coefficient": 0.01,
+    "skip_on_all_success": false,
+    "group_mask": 1,
     "modulation_mode": "symmetric_alignment",
     "modulation_lambda": 1.0,
-    "modulation_tau": 0.5
+    "modulation_tau": 0.5,
+    "modulation_gap": "command_mean",
+    "actor_weight_gap": "individual_token",
+    "rs_gap": "raw_command_sum",
+    "actor_denominator": "all_valid_response_tokens"
   },
   "rs_coefficient": 0.1,
-  "sft_material_unchanged": true,
-  "original_material_verification_date": "2026-10-23",
-  "streamed_adamw_verification_date": "2026-10-23",
-  "framework_model_source_included": true,
-  "packaged_files": 295,
-  "removed_unrelated_files": 737,
-  "packaging_revision": 3,
-  "active_loss_and_state_implementations_unchanged": 19
+  "rs_credit": "trajectory_equal_state_centered_shared_group_clip3",
+  "materials": {
+    "alfworld_3b": {
+      "groups": 200,
+      "reflections": 1600,
+      "skills": 200,
+      "natural_groups": 200,
+      "trajectories": 1600,
+      "annotator": "gpt-6.1-sol",
+      "recorded_labels": {
+        "gpt-5.6-terra": 200
+      },
+      "tokenized_supervision_unchanged": true
+    },
+    "alfworld_7b": {
+      "groups": 200,
+      "reflections": 1600,
+      "skills": 200,
+      "natural_groups": 200,
+      "trajectories": 1600,
+      "annotator": "gpt-6.1-sol",
+      "recorded_labels": {
+        "gpt-6.1-sol": 200
+      },
+      "tokenized_supervision_unchanged": true
+    },
+    "webshop_3b": {
+      "groups": 200,
+      "reflections": 1600,
+      "skills": 200,
+      "natural_groups": 200,
+      "trajectories": 1600,
+      "annotator": "gpt-6.1-sol",
+      "recorded_labels": {
+        "gpt-6-sol": 200
+      },
+      "tokenized_supervision_unchanged": true
+    },
+    "webshop_7b": {
+      "groups": 200,
+      "reflections": 1600,
+      "skills": 200,
+      "natural_groups": 200,
+      "trajectories": 1600,
+      "annotator": "gpt-6.1-sol",
+      "recorded_labels": {
+        "gpt-6.1-sol": 200
+      },
+      "tokenized_supervision_unchanged": true
+    }
+  },
+  "annotation_text_and_token_ids_unchanged": true,
+  "natural_trajectory_payloads_unchanged": true,
+  "preserved_storage_and_process_modules": [
+    "allow_profile_release.py",
+    "direct_native_save.py",
+    "durable_native_store.py",
+    "environment_checkpoint_methods.py",
+    "streamed_adamw.py",
+    "streamed_native_load.py"
+  ],
+  "gpu_training_rerun": false,
+  "full_environment_evaluation_rerun": false,
+  "historical_webshop_panel_ids_recovered": false,
+  "ablation_and_local_grpo_recipes_added": false
 }

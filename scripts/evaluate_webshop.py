@@ -1,4 +1,4 @@
-"""Evaluate a frozen3B/7B Actor on the same full500 WebShop test goals."""
+"""Evaluate a frozen3B/7B Actor on seeded128-goal WebShop panels."""
 import argparse
 import json
 import os
@@ -25,7 +25,8 @@ def main():
     seeds=[int(x) for x in args.seeds.split(',')]
     if not seeds or len(set(seeds))!=len(seeds):raise ValueError('Supply distinct evaluation seeds')
     settings=dict(model=str(args.model.resolve()),asset_root=str(args.asset_root.resolve()),seeds=seeds,
-                  catalog_seed=2026,temperature=.4,top_p=1.,top_k=-1,max_steps=30,history=5,prompt=2048,response=512)
+                  catalog_seed=0,temperature=.4,top_p=1.,top_k=-1,max_steps=15,history=2,prompt=4096,response=512,
+                  panel_size=128,pool_size=500,panel_sampler='python.random.Random(seed).sample')
     if (output/'plan.json').exists():
         if read(output/'plan.json')!=settings:raise ValueError('Existing output uses different model or settings')
     else:write(output/'plan.json',settings)

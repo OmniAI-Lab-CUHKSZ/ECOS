@@ -385,7 +385,7 @@ def supervise(plan):
 
 
 def main():
-    parser=argparse.ArgumentParser(description='Action-command Teacher (0.02) + joint R/S on 2..8 GPUs')
+    parser=argparse.ArgumentParser(description='Action-command Teacher (0.01) + joint R/S on 2..8 GPUs')
     parser.add_argument('--config',choices=PROFILES,default='alfworld_3b')
     parser.add_argument('--model',type=Path,help='Matching local SFT checkpoint600')
     parser.add_argument('--alfworld-data',type=Path)

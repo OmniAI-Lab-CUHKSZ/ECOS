@@ -1,30 +1,35 @@
-# Action-command Teacher supervision with joint Reflection / Skill updates
+# ECOS: Environment-Calibrated On-Policy Self-Distillation for Language Agents
 
-This source release provides Qwen2.5-3B and 7B SFT material and training pipelines
-for ALFWorld and WebShop. See [README.md](README.md) for setup, all four launch
-commands, checkpoints, recovery and evaluation.
+See [README.md](README.md) for installation, the four full-method profiles,
+SFT600, RL150, recovery, export and three-seed frozen evaluation.
 
-All four profiles share `configs/rl_common.yaml`:
+- Teacher coefficient 0.01; command-content tokens only.
+- A shared multiplier uses the command's mean gap and environmental advantage.
+  Each selected token retains its own Teacher-Actor gap; the raw summed command
+  gap remains available for R/S credit.
+- Both environments use q=1: all-success groups retain Teacher supervision,
+  following the author's clarification on 10 November 2026.
+- R/S uses trajectory-equal, within-state centered group credit, clipped to
+  [-3,3] and shared by R8 and S1. Reflection and Skill losses each receive half
+  the Analyzer weight. Coefficient 0.1, one shared optimizer, zero extra steps.
+- Main GRPO/KL/entropy and the Teacher token-mean denominator cover the complete
+  valid response. Actor Teacher supervision excludes reasoning and delimiters.
 
-- Eight natural trajectories per task; all-eight-success groups zero the entire
-  Actor Teacher weights and selected masks. Other groups remain eligible.
-- Teacher coefficient 0.02, applied only to tokens in the complete action command.
-  Reasoning, standalone tags and whitespace tokens receive no Teacher signal.
-- The existing `action_command` route uses the summed command gap:
-  `delta_action * (1 + sign(delta_action) * tanh(A_action_turn / 0.5))`.
-  This signed weight is shared by the command tokens, without an extra sign multiplier.
-- Joint Reflection/Skill coefficient 0.1; main loss backward followed by R/S
-  backward, with the same Adam step and zero extra optimizer steps.
-- Main GRPO, KL and entropy still cover the full valid response; the Teacher term
-  retains the original response denominator. The SFT and R/S text objectives stay unchanged.
+Each of the four datasets contains 200 groups, 1,600 natural trajectories,
+1,600 Reflections and 200 Skills. All annotations use GPT-6.1 sol / max, as
+confirmed by the author; original recorded model labels remain in metadata.
+SFT starts from the original Qwen2.5-Instruct backbones. WebShop collection uses
+the corresponding GRPO40 policies.
 
-Four packaged datasets contain 200 tasks each, with eight Reflections and one
-Skill per task: 7,200 SFT texts total, plus their natural trajectories, annotation
-messages and exact token IDs. SFT uses one task per AdamW update,
-`0.5*mean(NLL(R8)) + 0.5*NLL(S)`, three epochs and 600 updates.
+ALFWorld uses mini256, max30/history5, Actor prompt2048, Reflection8096 and
+Teacher4096. WebShop uses mini64, max15/history2, Actor prompt4096,
+Reflection16384, Teacher6144 and catalogue seed0. Response length is512.
 
-The repository contains code and material. Download model weights and environment
-assets separately. Portable entrypoints are checked locally; this release does
-not claim that all four standardized profiles were rerun on GPUs. See
-[docs/validation.md](docs/validation.md) for the exact validation scope and
+Evaluation reports six-category macro success on ALFWorld Seen140/Unseen134;
+WebShop uses128 goals per seed and reports Success plus Score. The default
+three evaluation seeds are0,1,2, with sample standard deviations. Paper tables
+are transcriptions, not new results from this update. Ablation and local-GRPO
+launch recipes are outside this release update.
+
+See [docs/validation.md](docs/validation.md) for checks and limitations and
 [THIRD_PARTY.md](THIRD_PARTY.md) for upstream attribution and licenses.

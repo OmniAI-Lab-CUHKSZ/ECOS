@@ -46,10 +46,10 @@ def test_actual_initializer_retains_method_settings_and_context_checks():
     cls, _ = trainer_class()
     config = OmegaConf.create(load_config('alfworld_3b'))
     trainer = cls(config)
-    assert trainer.route_lambda == .02 and trainer.reflect_loss_coef == .1
+    assert trainer.route_lambda == .01 and trainer.reflect_loss_coef == .1
     assert trainer.selective_actor_signal_scope == 'action_command'
     assert trainer.selective_lambda == 1. and trainer.selective_tau == .5
-    assert trainer.skip_teacher_on_all_success and trainer.rs_joint_update
+    assert not trainer.skip_teacher_on_all_success and trainer.rs_joint_update
     config.actor_rollout_ref.rollout.max_model_len = 4096
     with pytest.raises(ValueError, match='max_model_len'):
         cls(config)

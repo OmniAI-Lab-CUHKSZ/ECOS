@@ -1,0 +1,31 @@
+{
+  "dataset": "webshop_3b",
+  "environment": "webshop",
+  "model_family": "Qwen/Qwen2.5-3B-Instruct",
+  "groups": 200,
+  "reflections": 1600,
+  "skills": 200,
+  "natural_trajectories": 1600,
+  "annotator": "gpt-6.1-sol",
+  "reasoning_effort": "max",
+  "tokenizer": "Qwen/Qwen2.5-3B-Instruct",
+  "format": "groups-*.jsonl.gz; one R8+S1 group per JSON line",
+  "max_observed_sequence_tokens": 11592,
+  "max_observed_response_tokens": 341,
+  "max_sequence_length": 32768,
+  "truncation": "error",
+  "objective": "0.5*mean(response_NLL(R1..R8))+0.5*response_NLL(S)",
+  "training_tasks": 200,
+  "epochs": 3,
+  "optimizer_steps": 600,
+  "note": "All 200 tasks train; original sft_split fields are retained as material metadata only.",
+  "annotation_model_provenance": {
+    "recorded_labels": {
+      "gpt-6-sol": 200
+    },
+    "model_name_confirmation": "Author confirmed on 2026-11-10 that the historical labels identify GPT-6.1 sol.",
+    "recorded_labels_preserved": true
+  },
+  "sft_initialization": "Qwen/Qwen2.5-3B-Instruct",
+  "trajectory_policy": "GRPO40"
+}

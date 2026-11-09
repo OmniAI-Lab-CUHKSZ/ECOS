@@ -22,7 +22,8 @@ Imports, package exports, configurations and runtime callers were updated togeth
 
 | Retained code | Role |
 |---|---|
-| `verl/trainer/ppo/selective_gigpo.py` | Current Teacher weights, all-success masking and R/S credit; it does not import the removed root `gigpo` package |
+| `verl/trainer/ppo/selective_gigpo.py` | Token-specific Teacher weights, shared command modulation, state grouping and auxiliary advantages; retained optional masking helpers do not import the removed root `gigpo` package |
+| `verl/trainer/ppo/rs_sft_protocol.py` | Equations16–20: trajectory-equal state centering and one shared group credit for R8/S1, called by the active trainer |
 | `verl/utils/bepo_observation.py` | Frozen-reference observation features for the configured `bepo_unified_obs_action20` auxiliary estimator |
 | `verl/trainer/ppo/core_algos.py` | Current GRPO advantage, vanilla policy loss, aggregation and KL utilities |
 | FSDP/vLLM workers and sharding managers | Full-model training, generation, exact weight transfer, sleep/wake and RNG boundaries |
@@ -33,8 +34,8 @@ Imports, package exports, configurations and runtime callers were updated togeth
 
 `selective_gigpo` remains an internal configuration/module name for checkpoint and import compatibility. Current main policy advantage is GRPO, while the configured auxiliary observation/action estimator is `bepo_unified_obs_action20`.
 
-The released Teacher objective remains action-only with coefficient 0.02, all-eight-success masking and symmetric modulation. Joint R/S remains 0.1. SFT and R/S supervise complete Reflection/Skill texts. Full-response main GRPO/KL/entropy masks and the Teacher denominator are retained.
+The released Teacher objective uses command-only, per-token gaps with coefficient0.01 and a shared command-mean-derived symmetric multiplier. Both environments use q=1, following the author clarification. Joint R/S uses trajectory-equal, state-centered shared group credit with coefficient0.1. SFT and R/S supervise complete Reflection/Skill texts. Full-response main GRPO/KL/entropy masks and the Teacher denominator are retained.
 
 ## Verification
 
-Local checks cover imported local symbols, the real GRPO dispatcher, actual full-model weight synchronization/reuse and RNG boundaries, and Actor/R/S gradients. Four-profile dry-runs and unchanged SFT payload checks also pass. The 19 compared active loss/state implementations remain unchanged from the previous package. See [validation.md](validation.md) for results and the GPU-validation boundary.
+Local checks cover imported local symbols, the real GRPO dispatcher, actual full-model weight synchronization/reuse and RNG boundaries, and Actor/R/S gradients. The November update restores the previously omitted framework, prompts, memory modules and material files, aligns the Teacher formula/configuration/evaluators, and preserves the retained storage and process mechanisms. Annotation model names are corrected from author confirmation; target texts and token IDs are preserved. See [validation.md](validation.md) for results and the GPU-validation boundary.

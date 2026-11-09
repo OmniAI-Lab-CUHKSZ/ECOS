@@ -173,21 +173,23 @@ def main():
     assert Path(args.receipt_name).name == args.receipt_name
     method=json.loads((checkpoint/'method_observed.json').read_text())
     assert method['rs_joint_update'] and method['route_mode']=='selective_gigpo'
-    assert method['actor_signal_scope']=='action_command' and method['modulation_gap_unit']=='action_command_sum'
-    assert method['actor_gap_unit']=='action_command_sum'
+    assert method['actor_signal_scope']=='action_command' and method['modulation_gap_unit']=='action_command_mean'
+    assert method['actor_gap_unit']=='per_command_token'
     assert method['modulation_mode']=='symmetric_alignment' and method['modulation_lambda']==1. and method['modulation_tau']==.5
     actual=method['actor_metrics'];applied=actual['actor/optimizer_steps_applied']
     selective=method['selective_metrics']
     assert selective['selective/actor_response_token_scope']==0. and selective['selective/action_advantage_shared_across_response']==0.
     assert selective['selective/distilled_nonaction_tokens']==0.
-    assert selective['selective/skip_teacher_on_all_success']==1.
+    from response_rs.config import load_config
+    expected_skip=load_config(plan['profile'])['algorithm']['selective_gigpo']['skip_teacher_on_all_success']
+    assert selective['selective/skip_teacher_on_all_success']==float(expected_skip)
     # Natural groups may have zero Teacher or R/S credit. Record that outcome honestly.
     assert applied>0 and applied==actual['actor/optimizer_steps_attempted']
     for row in results:
         source_steps=row.get('source_adam_steps',[0.])
         assert row['adam_steps']==sorted(set(x+applied for x in source_steps))
         assert row['scheduler']['last_epoch']==args.step
-    assert math.isclose(actual['actor/route_coef'], .02, rel_tol=0.0, abs_tol=4*math.ulp(.02))
+    assert math.isclose(actual['actor/route_coef'], .01, rel_tol=0.0, abs_tol=4*math.ulp(.01))
     assert math.isclose(actual['rs/coef'], .1, rel_tol=0.0, abs_tol=4*math.ulp(.1))
     assert actual['rs/joint_update']==1 and actual['rs/extra_optimizer_steps']==0
     assert math.isfinite(actual['rs_joint/scaled_rs_grad_norm']) and actual['rs_joint/scaled_rs_grad_norm']>=0
