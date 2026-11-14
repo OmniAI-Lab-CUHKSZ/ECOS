@@ -1,6 +1,8 @@
 # Figure sources
 
-Current PNGs in `../images` are cropped renders of the author-supplied ECOS
-manuscript dated2026-11-10: Figure2/page4, Table1/page8, FigureD.1/page24.
-The previous vector PDFs are retained under `archive-v056/` as historical
-assets and are not the source of the current README images.
+The project README uses PNGs cropped from the author-supplied ECOS manuscript
+dated 10 November 2026:
+
+- [Method overview](../images/overview.png): Figure 2, page 4.
+- [Main results](../images/main-results.png): Table 1, page 8.
+- [Training dynamics](../images/alfworld-training.png): Figure D.1, page 24.

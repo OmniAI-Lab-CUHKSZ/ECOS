@@ -43,7 +43,7 @@ $$
 
 The command-content tokens share the multiplier, while their individual gaps and signs are preserved. Empty command spans have zero mean gap and no eligible tokens. Reasoning, standalone tags and whitespace-only tokens receive no direct Teacher signal. Teacher loss retains the complete valid-response denominator and signed PPO clipping. The author clarified that the group mask is one in both environments; `skip_teacher_on_all_success=false` implements this choice.
 
-R/S credit uses the **raw summed command gap** with trajectory-equal transition weights and within-state centered advantages (Equations 16–20). The resulting group credit is clipped to ±3 and assigned to all eight Reflections and the Skill. Reflection and Skill losses each receive half the Analyzer weight and share the Actor's optimizer update. See [the method and runtime guide](README_zh.md#方法).
+R/S credit uses the **raw summed command gap** with trajectory-equal transition weights and within-state centered advantages (Equations 16–20). The resulting group credit is clipped to ±3 and assigned to all eight Reflections and the Skill. Reflection and Skill losses each receive half the Analyzer weight and share the Actor's optimizer update, with no extra optimizer steps. See [the method and runtime guide](README_zh.md#方法).
 
 ## Main results
 
